@@ -1,7 +1,7 @@
 "use client";
 import React from 'react'
 import {useResume} from "@/context/resume"
-export default async function Dashboard() {
+export default  function Dashboard() {
     const {resumes} = useResume();
     return (
       <div>
