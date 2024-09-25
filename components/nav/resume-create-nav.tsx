@@ -1,9 +1,9 @@
 import React from 'react'
-import { useResume } from '@/context/resume'
+import { useResumeContext } from '@/context/resume'
 import { Button } from "@/components/ui/button"
 
 export default function ResumeCreateNav() {
-    const { step, setStep } = useResume();
+    const { step, setStep } = useResumeContext();
     return (
         <nav className='flex justify-center w-full py-4'>
             <div className='flex space-x-4'>

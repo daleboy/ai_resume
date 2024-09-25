@@ -1,18 +1,20 @@
 import React from 'react'
 import { Input } from "@/components/ui/input"
 import {Button} from "@/components/ui/button"
-import { useResume } from '@/context/resume'
+import { useResumeContext } from '@/context/resume'
 import {useUser,SignInButton} from "@clerk/nextjs"
-import {ResumeType} from '@/context/resume'
 
 export default function StepOneCreate() {
-    const {resume,setResume,saveResume} = useResume();
+    const {resume,setResume,saveResume} = useResumeContext();
+    
+    console.log(resume)
     const {isSignedIn} = useUser();
     const handleSubmit = (e: { preventDefault: () => void; })=>{
         e.preventDefault();
         console.log(resume);
         //save resume to db
         saveResume();
+        localStorage.removeItem("resume");
         //go to next step
     }
 

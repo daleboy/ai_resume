@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import {useResume} from "@/context/resume"
+import {useResumeContext} from "@/context/resume"
 import StepOne from "@/components/resume/step-one"
 import StepTwo from "@/components/resume/step-two"
 import StepThree from "@/components/resume/step-three"
@@ -9,7 +9,7 @@ import StepFive from "@/components/resume/step-five"
 import ResumeCreateNav from '@/components/nav/resume-create-nav'
 
 export default function ResumeEditPage() {
-  const {step,resume} = useResume();
+  const {step} = useResumeContext();
   return (
     <div className='flex flex-col justify-center items-center h-screen'>
       <ResumeCreateNav/>
