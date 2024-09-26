@@ -2,24 +2,24 @@
 import React from 'react'
 import { getResumeFromDB, getUserResumeFromDB, saveResumeToDB, updateResumeFromDB } from '@/actions/resume';
 import toast from "react-hot-toast"
-import {useRouter,useParams} from "next/navigation"
+import { useRouter, useParams, usePathname } from "next/navigation"
 import { Resume } from '@/models/resume';
 
 interface ResumeState {
     resume: Resume,
 }
-interface ResumesState{
-    resumes:Resume[],
+interface ResumesState {
+    resumes: Resume[],
 }
-type ResumeContextValue = ResumeState &ResumesState& {
+type ResumeContextValue = ResumeState & ResumesState & {
     saveResume: () => void;
-    setResume:(resume:Resume)=>void;
-    setStep:(step:number) => void;
-    loadResume:()=>void;
-    updateResume:()=>void;
+    setResume: (resume: Resume) => void;
+    setStep: (step: number) => void;
+    loadResume: () => void;
+    updateResume: () => void;
     step: number;
-  };
-  
+};
+
 const ResumeContext = React.createContext<ResumeContextValue | null>(null);
 
 const initialState: ResumeState = {
@@ -36,26 +36,35 @@ const initialState: ResumeState = {
 
 export default function ResumeProvider({ children }: { children: React.ReactNode }) {
     const [resumeState, setResumeState] = React.useState<ResumeState>(initialState);
-    const [resumesState,setResumesState] = React.useState<Resume[]>([]);
-    const [stepState,setStepState] = React.useState<number>(1);
+    const [resumesState, setResumesState] = React.useState<Resume[]>([]);
+    const [stepState, setStepState] = React.useState<number>(1);
+    //hooks
+    const router = useRouter();
+    const { _id } = useParams();//get the id from the request url address
+    const pathname = usePathname();
 
-    const loadResume = ()=>{
+    const loadResume = () => {
         const savedResume = localStorage.getItem("resume");
         // console.log(savedResume);
-        if(savedResume) {
+        if (savedResume) {
             const parsedResume = JSON.parse(savedResume); // Parse the saved resume
-            setResumeState((preState)=>({...preState, resume:parsedResume}));
+            setResumeState((preState) => ({ ...preState, resume: parsedResume }));
         }
     };
 
     React.useEffect(() => {
-        loadResume();
-    },[]);
-    //hooks
-    const router = useRouter();
-    const {_id} = useParams() ;//get the id from the request url address
+        if(pathname.includes('/resume/create')){
+            setResumeState(initialState);
+            setStep(1);
+        }
+    }, []);
 
-    const getUserResumes = async()=>{
+    React.useEffect(() => {
+        loadResume();
+    }, []);
+
+
+    const getUserResumes = async () => {
         try {
             const data = await getUserResumeFromDB() as Resume[];
             // console.log(data);
@@ -66,33 +75,33 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
             toast.error("Failed to get resumes");
         }
     };
-    
-    const setStep = (step:number) => {
+
+    const setStep = (step: number) => {
         setStepState(step);
     };
-    
-    React.useEffect(()=>{
+
+    React.useEffect(() => {
         //load all the resumes from DB
         getUserResumes();
-    },[]);
+    }, []);
 
-    React.useEffect(()=>{
-        if(_id){
+    React.useEffect(() => {
+        if (_id) {
             // console.log(_id);
             getResume();
         }
-    },[_id]);
+    }, [_id]);
 
-    const setResume = (resume:Resume)=>{
-        setResumeState((preState)=>({...preState, resume:resume}));
+    const setResume = (resume: Resume) => {
+        setResumeState((preState) => ({ ...preState, resume: resume }));
         // setResumesState((preState)=>([...preState, resume]));//push one resume to the ResumesState
     };
-    
+
     const saveResume = async () => {
         try {
             const data = await saveResumeToDB(resumeState.resume);
             const newResume = resumeState.resume;
-            setResumesState((preState)=>([...preState, newResume]));//push one resume to the ResumesState
+            setResumesState((preState) => ([...preState, newResume]));//push one resume to the ResumesState
             toast.success("🎉Resume saved.Keep building");
             router.push(`/dashboard/resume/edit/${data._id}`);
             // setStepState(2);
@@ -101,7 +110,7 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
             toast.error("Failed to save resume");
         }
     };
-    const getResume = async()=>{
+    const getResume = async () => {
         try {
             const data = await getResumeFromDB(_id as string);
             setResume(data);
@@ -111,7 +120,7 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
         }
     };
 
-    const updateResume = async()=>{
+    const updateResume = async () => {
         try {
             const data = await updateResumeFromDB(resumeState.resume);
             setResume(data);
@@ -127,7 +136,7 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
     // }, [resumeState]);
 
     return (
-        <ResumeContext.Provider value={{ resume: resumeState.resume, step: stepState,resumes:resumesState,setResume,setStep,saveResume,loadResume,updateResume}}>
+        <ResumeContext.Provider value={{ resume: resumeState.resume, step: stepState, resumes: resumesState, setResume, setStep, saveResume, loadResume, updateResume }}>
             {children}
         </ResumeContext.Provider>
     );

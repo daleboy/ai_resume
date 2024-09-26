@@ -11,7 +11,7 @@ export default function StepTwo() {
     setStep(3);
   };
   return (
-    <div className='w-full md:w-1/2 p-5 shadow-lg border-t-4 rounded-lg'>
+    <div className='w-full p-5 shadow-lg border-t-4 rounded-lg'>
       <h2 className='text-2xl font-bold mb-5'>Summary</h2>
       <Textarea onChange={e=>setResume({...resume,summary:e.target.value})}
       name='summary'
