@@ -10,6 +10,7 @@ import ResumeCreateNav from '@/components/nav/resume-create-nav'
 
 export default function ResumeCreatePage() {
   const {step} = useResumeContext();
+
   return (
     <div className='flex flex-col justify-center items-center h-screen'>
       <ResumeCreateNav/>

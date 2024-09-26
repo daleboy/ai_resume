@@ -6,14 +6,15 @@ import {useUser,SignInButton} from "@clerk/nextjs"
 
 
 export default function StepOne() {
-    const {resume,setResume,saveResume} = useResumeContext();
+    const {resume,setResume,updateResume,setStep} = useResumeContext();
     const {isSignedIn} = useUser();
-    const handleSubmit = (e: { preventDefault: () => void; })=>{
+    const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>)=>{
         e.preventDefault();
         console.log(resume);
-        //save resume to db
-        saveResume();
+        //update resume to db
+        updateResume();
         //go to next step
+        setStep(2);
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

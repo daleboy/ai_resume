@@ -5,7 +5,7 @@ import { useResumeContext } from '@/context/resume'
 import {useUser,SignInButton} from "@clerk/nextjs"
 
 export default function StepOneCreate() {
-    const {resume,setResume,saveResume} = useResumeContext();
+    const {resume,setResume,saveResume,setStep} = useResumeContext();
     
     console.log(resume)
     const {isSignedIn} = useUser();
@@ -16,6 +16,7 @@ export default function StepOneCreate() {
         saveResume();
         localStorage.removeItem("resume");
         //go to next step
+        setStep(2);
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

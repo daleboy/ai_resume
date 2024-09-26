@@ -5,6 +5,8 @@ import { SkeletonCard } from '@/components/cards/skeleton-cards';
 import ResumeCard from "@/components/cards/resume-card"
 export default function Dashboard() {
   const { resumes } = useResumeContext();
+  // console.log(resumes);
+  // console.log(resumes.length);
   if (!resumes?.length) {
     return (
       <div>
