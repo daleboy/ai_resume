@@ -1,9 +1,12 @@
 import React from 'react'
 import { useResumeContext } from '@/context/resume'
 import { Button } from "@/components/ui/button"
+import { usePathname } from 'next/navigation';
 
 export default function ResumeCreateNav() {
     const { step, setStep } = useResumeContext();
+    const pathName = usePathname();
+    const isEditPage = pathName.includes("/edit/");
     return (
         <nav className='flex justify-center w-full py-4'>
             <div className='flex space-x-4'>
@@ -12,7 +15,7 @@ export default function ResumeCreateNav() {
                         }`}
                         key={item}
                         onClick={() => setStep(item)}
-                        disabled={step < item}
+                        disabled={!isEditPage && step < item}
                     >
                         {item}
                     </Button>

@@ -11,9 +11,8 @@ export default function StepOne() {
     const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>)=>{
         e.preventDefault();
         console.log(resume);
-        //update resume to db
+        //update resume
         updateResume();
-        //go to next step
         setStep(2);
     }
 

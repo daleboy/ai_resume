@@ -14,9 +14,6 @@ export default function StepOneCreate() {
         console.log(resume);
         //save resume to db
         saveResume();
-        localStorage.removeItem("resume");
-        //go to next step
-        setStep(2);
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

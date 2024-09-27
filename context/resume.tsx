@@ -31,7 +31,6 @@ const initialState: ResumeState = {
         email: "",
         themeColor: "",
     }
-
 };
 
 export default function ResumeProvider({ children }: { children: React.ReactNode }) {
@@ -53,7 +52,7 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
     };
 
     React.useEffect(() => {
-        if(pathname.includes('/resume/create')){
+        if(pathname?.includes('/resume/create')){
             setResumeState(initialState);
             setStep(1);
         }
@@ -102,9 +101,10 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
             const data = await saveResumeToDB(resumeState.resume);
             const newResume = resumeState.resume;
             setResumesState((preState) => ([...preState, newResume]));//push one resume to the ResumesState
+            localStorage.removeItem("resume");
             toast.success("🎉Resume saved.Keep building");
             router.push(`/dashboard/resume/edit/${data._id}`);
-            // setStepState(2);
+            setStep(2);
         } catch (err) {
             console.error(err);
             toast.error("Failed to save resume");
