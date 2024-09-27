@@ -8,7 +8,6 @@ import { Brain, LoaderIcon } from "lucide-react"
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { callQwen } from "@/actions/ai-qwen"
-import {defaultPayload} from "@/models/qwen"
 import toast from 'react-hot-toast'
 
 export default function StepTwo() {
@@ -18,12 +17,14 @@ export default function StepTwo() {
   const [loading, setLoading] = React.useState(false);
 
   const handleGernateWithAi = async () => {
+    if(!resume.job){
+      toast.error('please fullfill your base resume information at step one');
+      return;
+    }
     setLoading(true);
-
     const prompt = `Generate a resume summary for a person with the following details:${JSON.stringify(resume)}`;
-    // defaultPayload.input.messages[1].content = prompt;
     try {
-      const gsummary = await callQwen(prompt);
+      const gsummary = await callQwen(prompt,'text');
       setResume({ ...resume, summary: gsummary })
     } catch (error) {
       console.error(error);
@@ -56,18 +57,18 @@ export default function StepTwo() {
           Generate with AI
         </Button>
       </div>
-      {/* <Textarea onChange={e=>setResume({...resume,summary:e.target.value})}
+      <Textarea onChange={e=>setResume({...resume,summary:e.target.value})}
       name='summary'
         value = {resume.summary}
         className='mb-3'
         placeholder='Write a summary about yourself'
         rows={10}
         required
-        /> */}
-      <ReactQuill
+        />
+      {/* <ReactQuill
         theme="snow"
         value={resume.summary}
-        onChange={(e) => setResume({ ...resume, summary: e })} />
+        onChange={(e) => setResume({ ...resume, summary: e })} /> */}
 
       <div className='flex justify-end'>
         <Button onClick={handleSubmit}>Next</Button>

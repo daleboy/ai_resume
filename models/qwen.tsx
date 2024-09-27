@@ -8,8 +8,9 @@ interface Input {
   messages: Message[];     // Array of messages
 }
 
+export type MessageType = 'message'|'text';
 interface Parameters {
-  result_format: 'message'|'text'; // Restricting the result_format to a specific value
+  result_format: MessageType; // Restricting the result_format to a specific value
 }
 
 export interface RequestPayload {
@@ -38,7 +39,7 @@ export const defaultPayload: RequestPayload = {
   }
 };
 
-//response object
+//response object for message
 interface Choice {
     finish_reason: string;
     message: {
@@ -47,7 +48,7 @@ interface Choice {
     };
   }
   
-  export interface QWenResponse {
+  export interface QWenResponseMessage {
     status_code: number;
     request_id: string;
     code: string;
@@ -63,3 +64,17 @@ interface Choice {
       total_tokens: number;
     };
   }
+
+  // response object for text
+  export interface QWenResponseText {
+    output: {
+        finish_reason: string;
+        text: string;
+    };
+    usage: {
+        total_tokens: number;
+        output_tokens: number;
+        input_tokens: number;
+    };
+    request_id: string;
+};

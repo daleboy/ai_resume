@@ -64,3 +64,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* quill dark mode css */
+@media print{
+  @page{
+    margin:0;
+  }
+  /* Hide specific elements */
+  .top-nav,
+  .meta-title,
+  .footer-text{
+    display: none;
+  }
+}
