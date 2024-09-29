@@ -8,7 +8,7 @@ export interface PersonInfo {
     email: string,
     themeColor: string,
 };
-interface Experience {
+export interface Experience {
     title: string;
     company: string;
     address: string;

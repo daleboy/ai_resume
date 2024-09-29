@@ -1,7 +1,7 @@
 "use server";
 
 import db from "@/utils/db";
-import { Resume } from '@/models/resume';
+import { Resume,Experience } from '@/models/resume';
 
 import {currentUser} from "@clerk/nextjs/server" 
 import ResumeModel from "@/models/resume";
@@ -86,7 +86,11 @@ export const updateResumeFromDB = async(data:Resume)=>{
         const {_id,...rest} =data;
         //check ownership
         await checkOwnership(_id as string);
-        const resume = await ResumeModel.findByIdAndUpdate(_id,{...rest},{new:true});
+        const resume = await ResumeModel.findByIdAndUpdate(
+            _id,
+            {...rest},
+            {new:true}
+        );
 
         return JSON.parse(JSON.stringify(resume));
     } catch (error) {
@@ -97,3 +101,26 @@ export const updateResumeFromDB = async(data:Resume)=>{
         }
     }
 }
+
+export const updateExperienceToDB = async(data:Resume)=>{
+    try {
+        db();
+        const {_id,...experience} = data;
+        //check ownership
+        await checkOwnership(_id as string);
+
+        const resume = await ResumeModel.findByIdAndUpdate(
+            _id,
+            {experience},
+            {new:true}
+        );
+
+        return JSON.parse(JSON.stringify(resume));
+    } catch (error) {
+        if(error instanceof Error){
+            throw new Error(error.message);
+        }else{
+            throw new Error("An unkonwn error occured");
+        }
+    }
+};

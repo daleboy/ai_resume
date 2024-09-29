@@ -3,9 +3,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { useResumeContext } from "@/context/resume"
 import { Brain, LoaderIcon } from "lucide-react"
-// import dynamic from 'next/dynamic'
-// const ReactQuill =dynamic(()=>import("react-quill"),{ssr:false});
-import ReactQuill from 'react-quill';
+// const ReactQuill = dynamic(import('react-quill'), { ssr: false });
+// import "react-quill/dist/quill.snow.css"
+// import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { callQwen } from "@/actions/ai-qwen"
 import toast from 'react-hot-toast'
