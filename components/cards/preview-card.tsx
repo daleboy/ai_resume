@@ -3,6 +3,7 @@ import { Resume } from '@/models/resume'
 import  PersonalDetail from "@/components/preview/personal-detail"
 import { useResumeContext } from '@/context/resume'
 import Summary from '@/components/preview/summary';
+import Experience from "@/components/preview/experience"
 export default function ResumeCard() {
     const {resume} = useResumeContext();
   return (
@@ -10,6 +11,7 @@ export default function ResumeCard() {
     style={{borderBlockColor:resume?.themeColor}}>
         <PersonalDetail resume={resume}/>
         <Summary resume={resume}/>
+        <Experience resume={resume}/>
     </div>
   )
 }
