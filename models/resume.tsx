@@ -14,7 +14,7 @@ export interface Experience {
     address: string;
     startDate: string;
     endDate: string;
-    summary:string
+    summary?:string
 }
 
 interface Education {

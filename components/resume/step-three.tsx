@@ -2,9 +2,9 @@ import React from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import dynamic from 'next/dynamic'
-// const ReactQuill = dynamic(import('react-quill'), { ssr: false });
-// import "react-quill/dist/quill.snow.css"
-import ReactQuill from 'react-quill';
+const ReactQuill = dynamic(()=>import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css"
+// import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { ArrowRight, Plus, X, Loader2Icon, Brain } from "lucide-react"
 import { useResumeContext } from '@/context/resume';
@@ -77,7 +77,7 @@ export default function StepThree() {
               <Button
               className='mt-3'
                 variant='destructive'
-                onClick={() => { handleExperienceGenerateWithAi }}
+                onClick={() => { handleExperienceGenerateWithAi(index) }}
                 disabled={experienceLoading[index]}
               >
                 {experienceLoading[index] ? (

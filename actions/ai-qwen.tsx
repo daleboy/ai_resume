@@ -13,7 +13,7 @@ export async function callQwen(prompt: string, messageType: MessageType) {
                 "Content-Type": "application/json",
                 "X-DashScope-SSE": "disable",
             },
-            body: getParams(prompt, messageType),
+            body: getParams(prompt),
         });
         const reader = response.body?.getReader();
 
@@ -31,7 +31,7 @@ export async function callQwen(prompt: string, messageType: MessageType) {
     }
 }
 
-function getParams(message: string, messageType: MessageType): string {
+function getParams(message: string): string {
     return JSON.stringify({
         model: "qwen-max",
         input: {

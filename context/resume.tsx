@@ -4,7 +4,7 @@ import { getResumeFromDB, getUserResumeFromDB, saveResumeToDB, updateResumeFromD
 import toast from "react-hot-toast"
 import { useRouter, useParams, usePathname } from "next/navigation"
 import { type Resume, type Experience } from '@/models/resume';
-import exp from 'constants';
+import { callQwen } from "@/actions/ai-qwen"
 
 interface ResumeState {
     resume: Resume,
@@ -56,7 +56,7 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
     const [resumesState, setResumesState] = React.useState<Resume[]>([]);
     const [stepState, setStepState] = React.useState<number>(1);
     const [experienceListState, setExperienceListState] = React.useState<Experience[]>([initialExperience])
-    const [experienceLoading, setExperienceLoading] = React.useState<boolean[]>([false]);
+    const [experienceLoading, setExperienceLoading] = React.useState<boolean[]>([]);
 
     //hooks
     const router = useRouter();
@@ -157,10 +157,10 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
     // }, [resumeState]);
 
     //Experience section
-    const updateExperience = async (experienceList: Experience[]) => {
+    const updateExperience = async () => {
         try {
-            const data = { ...resumeState.resume, experience: experienceList };
-            const resume = await updateExperienceToDB(data);
+            // const data = { ...resumeState.resume, experience: experienceListState };
+            const resume = await updateExperienceToDB(resumeState.resume._id as string,experienceListState);
             toast.success('🌈Experience updated.Keep building');
             setResume(resume);
         } catch (error) {
@@ -201,7 +201,7 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
     };
 
     const handleExperienceSubmit = async () => {
-        await updateExperience(experienceListState);
+        await updateExperience();
     };
 
     const addExperience = () => {
@@ -219,7 +219,39 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
         // update experience list to the db
     };
 
-    const handleExperienceGenerateWithAi = (index:number) => {
+    const handleExperienceGenerateWithAi = async (index:number) => {
+        setExperienceLoading((prev) => {
+            const newLoadingState = [...prev]; // Create a copy of the current state
+            newLoadingState[index] = true; // Set the value at the specified index
+            return newLoadingState; // Return the new array to update the state
+        });
+
+        const selectedExperience = experienceListState[index];
+        if(!selectedExperience||!selectedExperience.title){
+            toast.error('please fill the job title');
+        }
+
+        const jobTitle = selectedExperience.title;
+        const jobSummary = selectedExperience.summary?.replace(/<[^>]*>/g, "");
+        
+        try {
+            const prompt = `Generate a list of duties and responsibilities in HTML bullet points for the job title:"${jobTitle}" ${jobSummary}`;
+            const response = await callQwen(prompt,'text');
+            const updateExperience = [...experienceListState];
+            updateExperience[index].summary = response;
+            setExperienceListState(updateExperience);
+            const updateResume = {...resumeState.resume,experience:updateExperience};
+            setResume(updateResume);
+        } catch (error) {
+            console.error(error);
+            toast.error('Failed to generate job summary: ');
+        }finally{
+            setExperienceLoading((prev) => {
+                const newLoadingState = [...prev]; // Create a copy of the current state
+                newLoadingState[index] = false; // Set the value at the specified index
+                return newLoadingState; // Return the new array to update the state
+            });
+        }
     };
 
     return (

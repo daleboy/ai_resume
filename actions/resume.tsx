@@ -102,16 +102,16 @@ export const updateResumeFromDB = async(data:Resume)=>{
     }
 }
 
-export const updateExperienceToDB = async(data:Resume)=>{
+export const updateExperienceToDB = async(_id:string,experience:Experience[])=>{
     try {
         db();
-        const {_id,...experience} = data;
+       
         //check ownership
         await checkOwnership(_id as string);
 
         const resume = await ResumeModel.findByIdAndUpdate(
             _id,
-            {experience},
+            {experience:experience},
             {new:true}
         );
 
