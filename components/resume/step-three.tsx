@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input"
 import dynamic from 'next/dynamic'
 const ReactQuill = dynamic(()=>import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css"
-import 'react-quill/dist/quill.snow.css';
 import { ArrowRight, Plus, X, Loader2Icon, Brain } from "lucide-react"
 import { useResumeContext } from '@/context/resume';
 
@@ -33,7 +32,9 @@ export default function StepThree() {
               value={experience.title}
               className='mb-3'
               onChange={(e) => { handleExperienceChange(e, index) }}
-              placeholder='Job title' />
+              placeholder='Job title' 
+              autoFocus
+              />
 
             <Input
               name='company'

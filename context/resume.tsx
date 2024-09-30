@@ -1,17 +1,24 @@
 "use client"
 import React, { useEffect } from 'react'
-import { getResumeFromDB, getUserResumeFromDB, saveResumeToDB, updateResumeFromDB, updateExperienceToDB } from '@/actions/resume';
+import { getResumeFromDB, getUserResumeFromDB, saveResumeToDB, updateResumeFromDB, updateExperienceToDB, updateEducationToDB, updateSkillToDB } from '@/actions/resume';
 import toast from "react-hot-toast"
 import { useRouter, useParams, usePathname } from "next/navigation"
-import { type Resume, type Experience } from '@/models/resume';
+import { type Resume, type Experience, Education, Skill } from '@/models/resume';
 import { callQwen } from "@/actions/ai-qwen"
 
 interface ResumeState {
     resume: Resume,
-}
+};
 interface ResumesState {
     resumes: Resume[],
+};
+interface SkillChangeEvent {
+    target: {
+        name: keyof Skill; 
+        value: string;
+    };
 }
+
 type ResumeContextValue = ResumeState & ResumesState & {
     saveResume: () => void;
     setResume: (resume: Resume) => void;
@@ -25,9 +32,19 @@ type ResumeContextValue = ResumeState & ResumesState & {
     handleExperienceChange: (e: React.ChangeEvent<HTMLInputElement>, index: number) => void;
     setExperienceLoading: (loading: boolean[]) => void;
     handleExperienceQuillChange: (value: string, index: number)=>void;
+    handleEducationSubmit: () => void;
+    removeEducation: () => void;
+    addEducation: () => void;
+    handleEducationChange: (e: React.ChangeEvent<HTMLInputElement>, index: number) => void;
+    handleSkillSubmit: () => void;
+    removeSkill: () => void;
+    addSkill: () => void;
+    handleSkillChange: (e: SkillChangeEvent, index: number) => void;
     experienceList: Experience[];
     step: number;
     experienceLoading: boolean[];
+    educationList:Education[];
+    skillList: Skill[];
 };
 
 const ResumeContext = React.createContext<ResumeContextValue | null>(null);
@@ -38,7 +55,17 @@ const initialExperience = {
     startDate: '',
     endDate: '',
     summary: '',
-}
+};
+const initialEducation = {
+    name:'',
+    address:'',
+    qualification:'',
+    year:'',
+};
+const initialSkill = {
+    name:'',
+    level:'',
+};
 const initialState: ResumeState = {
     resume: {
         name: "",
@@ -48,6 +75,7 @@ const initialState: ResumeState = {
         email: "",
         themeColor: "",
         experience: [initialExperience],
+        education: [initialEducation],
     }
 };
 
@@ -55,8 +83,13 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
     const [resumeState, setResumeState] = React.useState<ResumeState>(initialState);
     const [resumesState, setResumesState] = React.useState<Resume[]>([]);
     const [stepState, setStepState] = React.useState<number>(1);
+    //Experience
     const [experienceListState, setExperienceListState] = React.useState<Experience[]>([initialExperience])
     const [experienceLoading, setExperienceLoading] = React.useState<boolean[]>([]);
+    //Education
+    const [educationListState,setEducationListState] = React.useState<Education[]>([]);
+    //Skill
+    const [skillListState,setSkillListState] = React.useState<Skill[]>([]);
 
     //hooks
     const router = useRouter();
@@ -157,6 +190,12 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
     // }, [resumeState]);
 
     //Experience section
+    useEffect(() => {
+        if (resumeState.resume.experience) {
+            setExperienceListState(resumeState.resume.experience);
+        }
+    }, [resumeState]);
+
     const updateExperience = async () => {
         try {
             // const data = { ...resumeState.resume, experience: experienceListState };
@@ -167,13 +206,8 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
             console.error(error);
             toast.error("❌Failed to update experiences");
         }
-    }
-    useEffect(() => {
-        if (resumeState.resume.experience) {
-            setExperienceListState(resumeState.resume.experience);
-        }
-    }, [resumeState]);
-
+    };
+    
     const handleExperienceChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const { name, value } = e.target;
         const newExperience = [...experienceListState];
@@ -202,6 +236,7 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
 
     const handleExperienceSubmit = async () => {
         await updateExperience();
+        // setStep(4);
     };
 
     const addExperience = () => {
@@ -254,6 +289,92 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
         }
     };
 
+    //Education section
+    useEffect(() => {
+        if (resumeState.resume.education) {
+            setEducationListState(resumeState.resume.education);
+        }
+    }, [resumeState]);
+    const updateEducation = async () => {
+        try {
+            const resume = await updateEducationToDB(resumeState.resume._id as string,educationListState);
+            toast.success('🌈Education updated.Keep building');
+            setResume(resume);
+        } catch (error) {
+            console.error(error);
+            toast.error("❌Failed to update education");
+        }
+    };
+    const handleEducationChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+        const { name, value } = e.target;
+        const newEducation = [...educationListState];
+        const education = newEducation[index];
+        education[name as keyof Education] = value;
+        setEducationListState(newEducation);
+    };
+    
+    const handleEducationSubmit = async () => {
+        await updateEducation();
+        // setStep(5);
+    };
+
+    const addEducation = () => {
+        const newEducation = { ...initialEducation };
+        setEducationListState([...educationListState, newEducation]);
+    };
+
+    const removeEducation = () => {
+        if (educationListState.length === 1) {
+            return;;
+        }
+        const educationList = educationListState.slice(0, educationListState.length - 1);
+        setEducationListState(educationList)
+
+        // update experience list to the db
+    };
+
+    //skill section
+    useEffect(() => {
+        if (resumeState.resume.skills) {
+            setSkillListState(resumeState.resume.skills);
+        }
+    }, [resumeState]);
+    const updateSkill = async () => {
+        try {
+            const resume = await updateSkillToDB(resumeState.resume._id as string,skillListState);
+            toast.success('Skills updated.Keep building');
+            setResume(resume);
+        } catch (error) {
+            console.error(error);
+            toast.error("❌Failed to update Skills");
+        }
+    };
+    const handleSkillChange = (e: SkillChangeEvent, index: number) => {
+        const { name, value } = e.target;
+        const newSkill = [...skillListState];
+        const skill = newSkill[index];
+        skill[name as keyof Skill] = value;
+        setSkillListState(newSkill);
+    };
+    
+    const handleSkillSubmit = async () => {
+        await updateSkill();
+    };
+
+    const addSkill = () => {
+        const newSkill = { ...initialSkill };
+        setSkillListState([...skillListState, newSkill]);
+    };
+
+    const removeSkill = () => {
+        if (skillListState.length === 1) {
+            return;;
+        }
+        const skillList = skillListState.slice(0, skillListState.length - 1);
+        setSkillListState(skillList)
+
+        // update experience list to the db
+    };
     return (
         <ResumeContext.Provider value={{
             resume: resumeState.resume,
@@ -261,6 +382,8 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
             resumes: resumesState,
             experienceList: experienceListState,
             experienceLoading: experienceLoading,
+            educationList: educationListState,
+            skillList: skillListState,
             handleExperienceChange,
             setExperienceLoading,
             setResume, setStep,
@@ -272,11 +395,19 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
             removeExperience,
             handleExperienceGenerateWithAi,
             handleExperienceQuillChange,
+            handleEducationChange,
+            addEducation,
+            removeEducation,
+            handleEducationSubmit,
+            handleSkillChange,
+            handleSkillSubmit,
+            addSkill,
+            removeSkill
         }}>
             {children}
         </ResumeContext.Provider>
     );
-}
+};
 
 export const useResumeContext = () => {
     const context = React.useContext(ResumeContext);

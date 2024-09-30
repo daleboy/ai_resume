@@ -15,19 +15,19 @@ export interface Experience {
     startDate: string;
     endDate: string;
     summary?:string
-}
+};
 
-interface Education {
+export interface Education {
     name: string;
     qualification: string;
     address: string;
     year:string;
-}
+};
 
-interface Skill {
+export interface Skill {
     name: string;
     level: string;
-}
+};
 
 const ExperienceSchema = new Schema<Experience>({
     title:String,

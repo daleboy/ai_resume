@@ -1,7 +1,7 @@
 "use server";
 
 import db from "@/utils/db";
-import { Resume,Experience } from '@/models/resume';
+import { Resume,Experience, Education, Skill } from '@/models/resume';
 
 import {currentUser} from "@clerk/nextjs/server" 
 import ResumeModel from "@/models/resume";
@@ -112,6 +112,52 @@ export const updateExperienceToDB = async(_id:string,experience:Experience[])=>{
         const resume = await ResumeModel.findByIdAndUpdate(
             _id,
             {experience:experience},
+            {new:true}
+        );
+
+        return JSON.parse(JSON.stringify(resume));
+    } catch (error) {
+        if(error instanceof Error){
+            throw new Error(error.message);
+        }else{
+            throw new Error("An unkonwn error occured");
+        }
+    }
+};
+
+export const updateEducationToDB = async(_id:string,education:Education[])=>{
+    try {
+        db();
+       
+        //check ownership
+        await checkOwnership(_id as string);
+
+        const resume = await ResumeModel.findByIdAndUpdate(
+            _id,
+            {education:education},
+            {new:true}
+        );
+
+        return JSON.parse(JSON.stringify(resume));
+    } catch (error) {
+        if(error instanceof Error){
+            throw new Error(error.message);
+        }else{
+            throw new Error("An unkonwn error occured");
+        }
+    }
+};
+
+export const updateSkillToDB = async(_id:string,skillList:Skill[])=>{
+    try {
+        db();
+       
+        //check ownership
+        await checkOwnership(_id as string);
+
+        const resume = await ResumeModel.findByIdAndUpdate(
+            _id,
+            {skills:skillList},
             {new:true}
         );
 
