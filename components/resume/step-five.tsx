@@ -21,6 +21,13 @@ export default function StepFive() {
     { label: 'Advanced', value: 4 },
     { label: 'Expert', value: 5 },
   ]
+  //state
+  const [loading, setLoading] = React.useState(false);
+  function handleSubmit(): void {
+    setLoading(true);
+    handleSkillSubmit();
+    setLoading(false);
+  }
 
   return (
     <div className='w-full p-5 shadow-lg border-t-4 rounded-lg overflow-y-auto'>
@@ -55,17 +62,23 @@ export default function StepFive() {
       }
 
       <div className='flex justify-between mt-3'>
-        <Button variant='outline' onClick={addSkill}>
+        <Button 
+        disabled={loading}
+        variant='outline' onClick={addSkill}>
           <Plus size={18} className='mr-2' />Add
         </Button>
 
         {skillList.length > 1 && (
-          <Button variant='outline' onClick={removeSkill}>
+          <Button 
+          disabled={loading}
+          variant='outline' onClick={removeSkill}>
             <X size={18} className='mr-2' />Remove
           </Button>
         )}
 
-        <Button variant='outline' onClick={handleSkillSubmit}>
+        <Button 
+        disabled={loading}
+        variant='outline' onClick={handleSubmit}>
           <ArrowRight size={18} className='mr-2' />Next
         </Button>
       </div>

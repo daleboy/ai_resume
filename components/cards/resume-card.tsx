@@ -10,7 +10,7 @@ import Skill from '../preview/skill'
 export default function ResumeCard({ resume }: { resume: Resume }) {
   return (
     <Link href={`/dashboard/resume/edit/${resume._id}`}>
-      <div className='shadow-lg  w-full rounded-xl p-5 border-t[20px] max-h-screen overflow-auto'
+      <div className='shadow-lg  w-full rounded-xl p-5 border-t-[20px] max-h-screen overflow-auto'
         style={{ borderBlockColor: resume?.themeColor }}>
         <div className='line-clamp-3'>
           <PersonalDetail resume={resume} />

@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-import { ArrowRight, Plus, X} from "lucide-react"
+import { ArrowRight, Plus, X } from "lucide-react"
 import { useResumeContext } from '@/context/resume';
 
 export default function StepFour() {
@@ -13,6 +13,13 @@ export default function StepFour() {
     removeEducation,
     handleEducationChange,
   } = useResumeContext();
+  //state
+  const [loading, setLoading] = React.useState(false);
+  function handleSubmit(): void {
+    setLoading(true);
+    handleEducationSubmit();
+    setLoading(false);
+  }
 
   return (
     <div className='w-full p-5 shadow-lg border-t-4 rounded-lg overflow-y-auto'>
@@ -27,8 +34,8 @@ export default function StepFour() {
               className='mb-3'
               onChange={(e) => { handleEducationChange(e, index) }}
               placeholder='University name'
-              autoFocus 
-              />
+              autoFocus
+            />
 
             <Input
               name='qualification'
@@ -53,24 +60,30 @@ export default function StepFour() {
               className='mb-3'
               onChange={(e) => { handleEducationChange(e, index) }}
               placeholder='Year' />
-            
+
           </div>
         ))
       }
 
       <div className='flex justify-between mt-3'>
-        <Button variant='outline' onClick={addEducation}>
+        <Button 
+        disabled={loading}
+        variant='outline' onClick={addEducation}>
           <Plus size={18} className='mr-2' />Add
         </Button>
 
 
         {educationList.length > 1 && (
-          <Button variant='outline' onClick={removeEducation}>
+          <Button 
+          disabled={loading}
+          variant='outline' onClick={removeEducation}>
             <X size={18} className='mr-2' />Remove
           </Button>
         )}
 
-        <Button variant='outline' onClick={handleEducationSubmit}>
+        <Button 
+        disabled={loading}
+        variant='outline' onClick={handleSubmit}>
           <ArrowRight size={18} className='mr-2' />Next
         </Button>
       </div>

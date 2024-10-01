@@ -2,7 +2,7 @@ import React from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import dynamic from 'next/dynamic'
-const ReactQuill = dynamic(()=>import("react-quill"), { ssr: false });
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css"
 import { ArrowRight, Plus, X, Loader2Icon, Brain } from "lucide-react"
 import { useResumeContext } from '@/context/resume';
@@ -19,6 +19,13 @@ export default function StepThree() {
     removeExperience,
     handleExperienceChange,
   } = useResumeContext();
+  //state
+  const [loading, setLoading] = React.useState(false);
+  function handleSubmit(): void {
+    setLoading(true);
+    handleExperienceSubmit();
+    setLoading(false);
+  }
 
   return (
     <div className='w-full p-5 shadow-lg border-t-4 rounded-lg overflow-y-auto'>
@@ -32,9 +39,9 @@ export default function StepThree() {
               value={experience.title}
               className='mb-3'
               onChange={(e) => { handleExperienceChange(e, index) }}
-              placeholder='Job title' 
+              placeholder='Job title'
               autoFocus
-              />
+            />
 
             <Input
               name='company'
@@ -75,7 +82,7 @@ export default function StepThree() {
             />
             <div className='flex justify-end'>
               <Button
-              className='mt-3'
+                className='mt-3'
                 variant='destructive'
                 onClick={() => { handleExperienceGenerateWithAi(index) }}
                 disabled={experienceLoading[index]}
@@ -91,18 +98,24 @@ export default function StepThree() {
       }
 
       <div className='flex justify-between mt-3'>
-        <Button variant='outline' onClick={addExperience}>
+        <Button 
+        disabled={loading}
+        variant='outline' onClick={addExperience}>
           <Plus size={18} className='mr-2' />Add
         </Button>
 
 
         {experienceList.length > 1 && (
-          <Button variant='outline' onClick={removeExperience}>
+          <Button 
+          disabled={loading}
+          variant='outline' onClick={removeExperience}>
             <X size={18} className='mr-2' />Remove
           </Button>
         )}
 
-        <Button variant='outline' onClick={handleExperienceSubmit}>
+        <Button 
+        disabled={loading}
+        variant='outline' onClick={handleSubmit}>
           <ArrowRight size={18} className='mr-2' />Next
         </Button>
       </div>

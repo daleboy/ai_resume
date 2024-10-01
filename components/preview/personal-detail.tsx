@@ -3,7 +3,7 @@ import { Resume } from '@/models/resume'
 export default function PersonalDetail({resume}:{resume:Resume}) {
   return (
     <>
-    <h2 className='font-bold tex-xl text-center'>
+    <h2 className='font-bold tex-xl text-center' style={{color:resume.themeColor}}>
         {resume.name}
     </h2>
     <h2 className='text-center text-sm font-medium'>{resume.job}</h2>

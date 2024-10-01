@@ -34,8 +34,10 @@ export default function StepTwo() {
   };
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setLoading(true);
     e.preventDefault();
     updateResume();
+    setLoading(false);
     setStep(3);
   };
   return (
@@ -43,7 +45,6 @@ export default function StepTwo() {
       <div className='flex justify-between'>
         <h2
           className='text-2xl font-bold mb-5'
-          style={{ color: resume.themeColor }}
         >Summary
         </h2>
         <Button
@@ -71,7 +72,11 @@ export default function StepTwo() {
         onChange={(e) => setResume({ ...resume, summary: e })} /> */}
 
       <div className='flex justify-end'>
-        <Button onClick={handleSubmit}>Next</Button>
+        <Button 
+        disabled={loading}
+        onClick={handleSubmit}>
+          Next
+          </Button>
       </div>
 
     </div>

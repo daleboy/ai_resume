@@ -236,7 +236,7 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
 
     const handleExperienceSubmit = async () => {
         await updateExperience();
-        // setStep(4);
+        setStep(4);
     };
 
     const addExperience = () => {
@@ -315,7 +315,7 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
     
     const handleEducationSubmit = async () => {
         await updateEducation();
-        // setStep(5);
+        setStep(5);
     };
 
     const addEducation = () => {
