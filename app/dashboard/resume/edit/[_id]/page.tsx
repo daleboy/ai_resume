@@ -8,7 +8,6 @@ import StepFour from "@/components/resume/step-four"
 import StepFive from "@/components/resume/step-five"
 import ResumeCreateNav from '@/components/nav/resume-create-nav'
 import PreviewCard from "@/components/cards/preview-card";
-import { Resume } from '@/models/resume'
 
 export default function ResumeEditPage({ params }: { params: any }) {
   const { step,resumes,setResume } = useResumeContext();
