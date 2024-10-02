@@ -1,10 +1,13 @@
 import { Resume } from '@/models/resume'
 import dynamic from 'next/dynamic';
-import React from 'react'
+import React, { useMemo } from 'react'
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+
+// import ReactQuill from 'react-quill-new';
 import 'react-quill/dist/quill.bubble.css';
 
 export default function Experience({ resume }: { resume: Resume }) {
+    // const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);
     return (
         <div className='my-6'>
             <h2
@@ -20,14 +23,13 @@ export default function Experience({ resume }: { resume: Resume }) {
                         <h2 className='text-sm'>{exp?.company}</h2>
                         <p className='text-xs text-gray-600'>{exp?.address}</p>
 
-                        {exp?.summary&&(
-                            <ReactQuill
+                        <ReactQuill
+                        id={String(index)}
                             readOnly={true}
                             value={exp.summary}
                             theme='bubble'
                             className='text-sm font-normal'
                             />
-                        )}
                     </div>
                 );
             })}

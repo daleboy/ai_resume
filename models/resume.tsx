@@ -1,5 +1,9 @@
-import mongoose,{Schema,model} from "mongoose";
-// Define the interface for the document
+import mongoose, { Schema, model } from "mongoose";
+
+export interface SkillProps {
+    resume?: Resume,
+    print?: string,
+};
 export interface PersonInfo {
     name: string,
     job: string,
@@ -14,14 +18,14 @@ export interface Experience {
     address: string;
     startDate: string;
     endDate: string;
-    summary?:string
+    summary?: string
 };
 
 export interface Education {
     name: string;
     qualification: string;
     address: string;
-    year:string;
+    year: string;
 };
 
 export interface Skill {
@@ -30,29 +34,29 @@ export interface Skill {
 };
 
 const ExperienceSchema = new Schema<Experience>({
-    title:String,
-    company:String,
-    address:String,
-    startDate:String,
-    endDate:String,
-    summary:String,
+    title: String,
+    company: String,
+    address: String,
+    startDate: String,
+    endDate: String,
+    summary: String,
 });
 
 const EducationSchema = new Schema<Education>({
-    name:String,
-    address:String,
-    qualification:String,
-    year:String,
+    name: String,
+    address: String,
+    qualification: String,
+    year: String,
 });
 
 const SkillSchema = new Schema<Skill>({
-    name:String,
-    level:String,
+    name: String,
+    level: String,
 });
 export interface Resume extends PersonInfo {
     _id?: string;
-    userEmail?:string;
-    title?:string;
+    userEmail?: string;
+    title?: string;
     summary?: string;
     experience?: Experience[];
     education?: Education[];
@@ -60,23 +64,23 @@ export interface Resume extends PersonInfo {
 }
 export const ResumeSchema = new Schema<Resume>(
     {
-        userEmail:{
+        userEmail: {
             type: String,
             required: true,
         },
-        title:String,
-        name:String,
-        job:String,
-        email:String,
-        phone:String,
-        address:String,
-        themeColor:String,
-        summary:String,
-        experience:[ExperienceSchema],
-        education:[EducationSchema],
-        skills:[SkillSchema],
+        title: String,
+        name: String,
+        job: String,
+        email: String,
+        phone: String,
+        address: String,
+        themeColor: String,
+        summary: String,
+        experience: [ExperienceSchema],
+        education: [EducationSchema],
+        skills: [SkillSchema],
     },
-    {timestamps:true}
+    { timestamps: true }
 );
 
 

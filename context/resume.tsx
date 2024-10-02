@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect } from 'react'
-import { getResumeFromDB, getUserResumeFromDB, saveResumeToDB, updateResumeFromDB, updateExperienceToDB, updateEducationToDB, updateSkillToDB } from '@/actions/resume';
+import { getResumeFromDB, getUserResumeFromDB, saveResumeToDB, updateResumeFromDB, updateExperienceToDB, updateEducationToDB, updateSkillToDB,deleteResumeFromDB } from '@/actions/resume';
 import toast from "react-hot-toast"
 import { useRouter, useParams, usePathname } from "next/navigation"
 import { type Resume, type Experience, Education, Skill } from '@/models/resume';
@@ -25,6 +25,8 @@ type ResumeContextValue = ResumeState & ResumesState & {
     setStep: (step: number) => void;
     loadResume: () => void;
     updateResume: () => void;
+    removeResume: (id:string) => void;
+    getResumeExById:(id:string) => Resume | undefined;
     handleExperienceSubmit: () => void;
     removeExperience: () => void;
     handleExperienceGenerateWithAi: (index:number) => void;
@@ -98,7 +100,6 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
 
     const loadResume = () => {
         const savedResume = localStorage.getItem("resume");
-        // console.log(savedResume);
         if (savedResume) {
             const parsedResume = JSON.parse(savedResume); // Parse the saved resume
             setResumeState((preState) => ({ ...preState, resume: parsedResume }));
@@ -138,12 +139,12 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
         getUserResumes();
     }, []);
 
-    React.useEffect(() => {
-        if (_id) {
-            // console.log(_id);
-            getResume();
-        }
-    }, [_id]);
+    // React.useEffect(() => {
+    //     if (_id) {
+    //         // console.log(_id);
+    //         getResume();
+    //     }
+    // }, [_id]);
 
     const setResume = (resume: Resume) => {
         setResumeState((preState) => ({ ...preState, resume: resume }));
@@ -158,21 +159,48 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
             localStorage.removeItem("resume");
             toast.success("🎉Resume saved.Keep building");
             router.push(`/dashboard/resume/edit/${data._id}`);
-            setStep(2);
         } catch (err) {
             console.error(err);
             toast.error("Failed to save resume");
         }
     };
+
     const getResume = async () => {
         try {
             const data = await getResumeFromDB(_id as string);
             setResume(data);
         } catch (error) {
             console.error(error);
-            toast.error("Failed to get resume");
+            toast.error("getResume:Failed to get resume");
         }
     };
+
+    const getResumeById = async (id:string) => {
+        try {
+            console.log("getResumeById: " + id);
+            const data:Resume = await getResumeFromDB(id);
+            setResume(data);
+            return data;
+        } catch (error) {
+            console.error(error);
+            toast.error("getResumeById:Failed to get resume");
+            return undefined;
+        }
+    };
+
+    const getResumeExById = (id: string): Resume | undefined => {
+        let result: Resume | undefined;
+    
+        getResumeById(id).then(resume => {
+            result = resume; 
+        }).catch(error => {
+            console.error(error);
+            toast.error("getResumeExById:Failed to get resume");
+        });
+    
+        return result; 
+    };
+  
 
     const updateResume = async () => {
         try {
@@ -184,6 +212,20 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
             toast.error("❌Failed to update resume");
         }
     };
+
+    const removeResume = async(id:string) => {
+        try {
+            const resume = await deleteResumeFromDB(id);
+            setResumeState(initialState);
+            setResumesState(resumesState.filter((resume)=>(resume._id !== id)));
+            setStep(1);
+            toast.success("🌈Resume deleted.");
+        } catch (error) {
+            console.error(error);
+            toast.error("❌Failed to delete resume");
+        }
+       
+    }
 
     // React.useEffect(() => {
     //     console.log(resumeState); // This will log the updated state after it changes
@@ -250,8 +292,6 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
         }
         const experienceList = experienceListState.slice(0, experienceListState.length - 1);
         setExperienceListState(experienceList)
-
-        // update experience list to the db
     };
 
     const handleExperienceGenerateWithAi = async (index:number) => {
@@ -329,8 +369,6 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
         }
         const educationList = educationListState.slice(0, educationListState.length - 1);
         setEducationListState(educationList)
-
-        // update experience list to the db
     };
 
     //skill section
@@ -344,6 +382,7 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
             const resume = await updateSkillToDB(resumeState.resume._id as string,skillListState);
             toast.success('Skills updated.Keep building');
             setResume(resume);
+            router.push(`/dashboard/resume/download/${resumeState.resume._id}`)
         } catch (error) {
             console.error(error);
             toast.error("❌Failed to update Skills");
@@ -372,8 +411,6 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
         }
         const skillList = skillListState.slice(0, skillListState.length - 1);
         setSkillListState(skillList)
-
-        // update experience list to the db
     };
     return (
         <ResumeContext.Provider value={{
@@ -402,7 +439,9 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
             handleSkillChange,
             handleSkillSubmit,
             addSkill,
-            removeSkill
+            removeSkill,
+            removeResume,
+            getResumeExById,
         }}>
             {children}
         </ResumeContext.Provider>

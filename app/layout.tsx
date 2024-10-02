@@ -9,8 +9,8 @@ import {ClerkProvider} from '@clerk/nextjs'
 const inter = Inter({subsets:["latin"]});
 
 export const metadata: Metadata = {
-  title: "Personal Resume App",
-  description: "A private personal resume app",
+  title: "AI Resume Builder",
+  description: "AI powered resume builder to build a professional resume in minutes.Download print or share for free with anyone in the world!",
 };
 
 export default function RootLayout({

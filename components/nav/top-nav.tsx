@@ -15,7 +15,7 @@ import {
 export default function TopNav() {
   const { isLoaded, isSignedIn, user } = useUser();
   return (
-    <nav className='flex justify-between py-1 items-center shadow'>
+    <nav className='flex justify-between py-1 items-center shadow top-nav'>
         <Link href = "/">
         <Toaster/>
         <Image src ={Logo} width={50} height={50} alt='logo'/>

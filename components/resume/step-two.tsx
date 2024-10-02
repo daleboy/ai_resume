@@ -3,9 +3,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { useResumeContext } from "@/context/resume"
 import { Brain, LoaderIcon } from "lucide-react"
-// const ReactQuill = dynamic(import('react-quill'), { ssr: false });
-// import "react-quill/dist/quill.snow.css"
-// import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { callQwen } from "@/actions/ai-qwen"
 import toast from 'react-hot-toast'
@@ -66,11 +63,6 @@ export default function StepTwo() {
         rows={10}
         required
         />
-      {/* <ReactQuill
-        theme="snow"
-        value={resume.summary}
-        onChange={(e) => setResume({ ...resume, summary: e })} /> */}
-
       <div className='flex justify-end'>
         <Button 
         disabled={loading}

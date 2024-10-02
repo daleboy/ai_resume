@@ -5,6 +5,7 @@ import { Resume,Experience, Education, Skill } from '@/models/resume';
 
 import {currentUser} from "@clerk/nextjs/server" 
 import ResumeModel from "@/models/resume";
+import { AppWindowMac } from "lucide-react";
 
 const checkOwnership = async(resumeId:string)=>{
     try {
@@ -70,7 +71,7 @@ export const getResumeFromDB = async(_id:string)=>{
     try {
         db();
         const resume = await ResumeModel.findById(_id) as Resume;
-        return JSON.parse(JSON.stringify(resume));
+        return resume;
     } catch (error) {
         if(error instanceof Error){
             throw new Error(error.message);
@@ -170,3 +171,20 @@ export const updateSkillToDB = async(_id:string,skillList:Skill[])=>{
         }
     }
 };
+
+export const deleteResumeFromDB = async (_id:string) =>{
+    try {
+        db();
+        //check ownership
+        await checkOwnership(_id);
+
+        const resume = await ResumeModel.findByIdAndDelete(_id);
+        return JSON.parse(JSON.stringify(resume));
+    } catch (error) {
+        if(error instanceof Error){
+            throw new Error(error.message);
+        }else{
+            throw new Error("An unkonwn error occured");
+        }
+    }
+}
