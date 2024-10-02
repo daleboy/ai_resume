@@ -5,7 +5,7 @@ import { useResumeContext } from '@/context/resume'
 import { useUser, SignInButton } from "@clerk/nextjs"
 
 export default function StepOneCreate() {
-    const { resume, setResume, saveResume, setStep } = useResumeContext();
+    const { resume, setResume, saveResume } = useResumeContext();
 
     console.log(resume)
     const { isSignedIn } = useUser();

@@ -21,7 +21,7 @@ export default function TopNav() {
         <Image src ={Logo} width={50} height={50} alt='logo'/>
         </Link>
         <div className='flex justify-end items-center gap-2'>
-          {isSignedIn && isLoaded  && <Link href="/dashboard">{user.fullName}'s Dashboard</Link>}
+          {isSignedIn && isLoaded  && <Link href="/dashboard">{user.fullName} Dashboard</Link>}
         <SignedOut>
             <SignInButton />
           </SignedOut>

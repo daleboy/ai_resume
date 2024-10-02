@@ -24,7 +24,7 @@ import { Resume } from '@/models/resume'
 //         }
 //     }
 // };
-export default function ResumePage({ params }: { params: any }) {
+export default function ResumePage({ params }: { params: {_id:string} }) {
     const { resumes } = useResumeContext();
     const [currentResume, setCurrentStateResume] = React.useState<Resume>();
     React.useEffect(() => {

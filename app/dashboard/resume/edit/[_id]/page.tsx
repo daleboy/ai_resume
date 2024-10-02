@@ -9,7 +9,7 @@ import StepFive from "@/components/resume/step-five"
 import ResumeCreateNav from '@/components/nav/resume-create-nav'
 import PreviewCard from "@/components/cards/preview-card";
 
-export default function ResumeEditPage({ params }: { params: any }) {
+export default function ResumeEditPage({ params }: { params: {_id:string} }) {
   const { step,resumes,setResume } = useResumeContext();
   //state
   React.useEffect(() => {
@@ -19,7 +19,7 @@ export default function ResumeEditPage({ params }: { params: any }) {
             setResume(resume);
           }
       }
-  }, [resumes, params._id]);
+  }, [resumes, params._id,setResume]);
   return (
     <div className='flex flex-col lg:flex-row h-screen overflow-y-auto'>
       <div className='flex flex-col lg:w-1/2 p-4 lg:order-last lg:flex lg:justify-center lg:items-center'>

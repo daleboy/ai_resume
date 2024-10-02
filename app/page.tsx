@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import Link from 'next/link'
+import Link from "next/link"
 import { ArrowRight, Sparkles, Download, Printer, Share2 } from "lucide-react"
 export default function LandingPage() {
     return (
@@ -12,9 +12,9 @@ export default function LandingPage() {
                             Create Your Perfect Resume with AI
                         </h1>
                         <p className='text-white mb-5 max-w-2xl mx-auto'>
-                            Our AI-powered resume builder helps you craft professional,
-                            eye-catching resumes in seconds.It's free to use and incredibly
-                            easy.Stand out from the crowd and land your dream job!
+                            <p>Our AI-powered resume builder helps you craft professional,</p>
+                            <p>eye-catching resumes in seconds.It is free to use and incredibly</p>
+                            <p>easy.Stand out from the crowd and land your dream job!</p>
                         </p>
                         <Link href="/resume/create">
                             <Button size='lg' className='text-lg px-8 py-4'>
@@ -73,9 +73,9 @@ export default function LandingPage() {
                         </div>
                     </div>
                     <p className="text-xl mb-8 max-w-2xl mx-auto">
-                        Join thousands of job seekers who have successfully landed their
-                        dream jobs using your free,easy-to-use AI-powered resum builder.
-                        Create unlimited resumes and choose how to use them!
+                        <p>Join thousands of job seekers who have successfully landed their</p>
+                        <p>dream jobs using your free,easy-to-use AI-powered resum builder.</p>
+                        <p>Create unlimited resumes and choose how to use them!</p>
                     </p>
                 </div>
             </section>

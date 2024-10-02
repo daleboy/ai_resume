@@ -1,13 +1,9 @@
 import { Resume } from '@/models/resume'
 import dynamic from 'next/dynamic';
-import React, { useMemo } from 'react'
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-
-// import ReactQuill from 'react-quill-new';
 import 'react-quill/dist/quill.bubble.css';
 
 export default function Experience({ resume }: { resume: Resume }) {
-    // const ReactQuill = useMemo(() => dynamic(() => import('react-quill'), { ssr: false }),[]);
     return (
         <div className='my-6'>
             <h2

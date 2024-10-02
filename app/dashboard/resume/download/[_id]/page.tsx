@@ -8,13 +8,11 @@ import Print from "@/public/Print.png"
 import { useResumeContext } from '@/context/resume';
 import { Resume } from '@/models/resume';
 import ResumeCard from '@/components/cards/resume-card';
-import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
-export default function DownloadPage({ params }: { params: any }) {
+export default function DownloadPage({ params }: { params: {_id:string} }) {
     const { resumes } = useResumeContext();
     //state
     const [currentResume, setCurrentStateResume] = React.useState<Resume>();
-    const router = useRouter();
     React.useEffect(() => {
         if (resumes && params?._id) {
             const resume = resumes.find((r) => (r._id === params._id));
@@ -24,7 +22,7 @@ export default function DownloadPage({ params }: { params: any }) {
     const printResume = () => {
         // router.push(`/resume/${currentResume?._id}`);
         const url = `/resume/${currentResume?._id}`;
-        const newWindow = window.open(url, '_blank'); // Open in a new tab
+        window.open(url, '_blank'); // Open in a new tab
     };
     // const printResume = () => {
     //     if (typeof(window) !== 'undefined' && currentResume){
