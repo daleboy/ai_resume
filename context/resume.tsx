@@ -68,7 +68,7 @@ const initialSkill = {
     name:'',
     level:'',
 };
-const initialState: ResumeState = {
+export const initialState: ResumeState = {
     resume: {
         name: "",
         job: "",

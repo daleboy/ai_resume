@@ -9,6 +9,7 @@ import { useResumeContext } from '@/context/resume';
 import { Resume } from '@/models/resume';
 import ResumeCard from '@/components/cards/resume-card';
 import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
 export default function DownloadPage({ params }: { params: any }) {
     const { resumes } = useResumeContext();
     //state
@@ -71,7 +72,10 @@ export default function DownloadPage({ params }: { params: any }) {
                             height={50}
                             alt='download'
                         />
-                        <Button className='my-2'>Share</Button>
+                        <Button onClick={()=>{
+                            navigator.clipboard.writeText(`${window.location.origin}/resume/${currentResume?._id}`);
+                            toast.success('Link copied to clipboard to share with anyone and anywhere!');
+                        }} className='my-2'>Share</Button>
                     </div>
                 </div>
                 {currentResume && <ResumeCard resume={currentResume} />}

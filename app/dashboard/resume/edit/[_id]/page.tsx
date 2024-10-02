@@ -8,9 +8,19 @@ import StepFour from "@/components/resume/step-four"
 import StepFive from "@/components/resume/step-five"
 import ResumeCreateNav from '@/components/nav/resume-create-nav'
 import PreviewCard from "@/components/cards/preview-card";
+import { Resume } from '@/models/resume'
 
-export default function ResumeEditPage() {
-  const { step } = useResumeContext();
+export default function ResumeEditPage({ params }: { params: any }) {
+  const { step,resumes,setResume } = useResumeContext();
+  //state
+  React.useEffect(() => {
+      if (resumes && params?._id) {
+          const resume = resumes.find((r) => (r._id === params._id));
+          if(resume){
+            setResume(resume);
+          }
+      }
+  }, [resumes, params._id]);
   return (
     <div className='flex flex-col lg:flex-row h-screen overflow-y-auto'>
       <div className='flex flex-col lg:w-1/2 p-4 lg:order-last lg:flex lg:justify-center lg:items-center'>
