@@ -5,7 +5,6 @@ import { Resume,Experience, Education, Skill } from '@/models/resume';
 
 import {currentUser} from "@clerk/nextjs/server" 
 import ResumeModel from "@/models/resume";
-import { AppWindowMac } from "lucide-react";
 
 const checkOwnership = async(resumeId:string)=>{
     try {

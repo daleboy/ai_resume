@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect } from 'react'
-import { getResumeFromDB, getUserResumeFromDB, saveResumeToDB, updateResumeFromDB, updateExperienceToDB, updateEducationToDB, updateSkillToDB,deleteResumeFromDB } from '@/actions/resume';
+import { getUserResumeFromDB, saveResumeToDB, updateResumeFromDB, updateExperienceToDB, updateEducationToDB, updateSkillToDB,deleteResumeFromDB } from '@/actions/resume';
 import toast from "react-hot-toast"
 import { useRouter, useParams, usePathname } from "next/navigation"
 import { type Resume, type Experience, Education, Skill } from '@/models/resume';
@@ -26,7 +26,6 @@ type ResumeContextValue = ResumeState & ResumesState & {
     loadResume: () => void;
     updateResume: () => void;
     removeResume: (id:string) => void;
-    getResumeExById:(id:string) => Resume | undefined;
     handleExperienceSubmit: () => void;
     removeExperience: () => void;
     handleExperienceGenerateWithAi: (index:number) => void;
@@ -95,7 +94,7 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
 
     //hooks
     const router = useRouter();
-    const { _id } = useParams();//get the id from the request url address
+    const { _id } = useParams();//get the id from the request url address---not used
     const pathname = usePathname();
 
     const loadResume = () => {
@@ -121,9 +120,7 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
     const getUserResumes = async () => {
         try {
             const data = await getUserResumeFromDB() as Resume[];
-            // console.log(data);
-            // setResumesState((preState)=>({...preState, data}));//the resumesState data is not a list object
-            setResumesState(data);//the resumesState data is a list object
+            setResumesState(data);
         } catch (error) {
             console.error(error);
             toast.error("Failed to get resumes");
@@ -139,23 +136,15 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
         getUserResumes();
     }, []);
 
-    // React.useEffect(() => {
-    //     if (_id) {
-    //         // console.log(_id);
-    //         getResume();
-    //     }
-    // }, [_id]);
-
     const setResume = (resume: Resume) => {
         setResumeState((preState) => ({ ...preState, resume: resume }));
-        // setResumesState((preState)=>([...preState, resume]));//push one resume to the ResumesState
     };
 
     const saveResume = async () => {
         try {
             const data = await saveResumeToDB(resumeState.resume);
             const newResume = resumeState.resume;
-            setResumesState((preState) => ([...preState, newResume]));//push one resume to the ResumesState
+            setResumesState((preState) => ([...preState, newResume]));//push one resume to the ResumesState（resume object list）
             localStorage.removeItem("resume");
             toast.success("🎉Resume saved.Keep building");
             router.push(`/dashboard/resume/edit/${data._id}`);
@@ -164,43 +153,6 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
             toast.error("Failed to save resume");
         }
     };
-
-    const getResume = async () => {
-        try {
-            const data = await getResumeFromDB(_id as string);
-            setResume(data);
-        } catch (error) {
-            console.error(error);
-            toast.error("getResume:Failed to get resume");
-        }
-    };
-
-    const getResumeById = async (id:string) => {
-        try {
-            console.log("getResumeById: " + id);
-            const data:Resume = await getResumeFromDB(id);
-            setResume(data);
-            return data;
-        } catch (error) {
-            console.error(error);
-            toast.error("getResumeById:Failed to get resume");
-            return undefined;
-        }
-    };
-
-    const getResumeExById = (id: string): Resume | undefined => {
-        let result: Resume | undefined;
-    
-        getResumeById(id).then(resume => {
-            result = resume; 
-        }).catch(error => {
-            console.error(error);
-            toast.error("getResumeExById:Failed to get resume");
-        });
-    
-        return result; 
-    };
-  
 
     const updateResume = async () => {
         try {
@@ -226,10 +178,6 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
         }
        
     }
-
-    // React.useEffect(() => {
-    //     console.log(resumeState); // This will log the updated state after it changes
-    // }, [resumeState]);
 
     //Experience section
     useEffect(() => {
@@ -258,7 +206,7 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
         setExperienceListState(newExperience);
         
 
-        // // or relpace the function to this:
+        // // or relpace the codes on the top to this:
         // const experience = experienceListState[index];
         // const updatedExperience = { ...experience, [name]: value };
         // const updatedExperiences = [
@@ -442,7 +390,6 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
             addSkill,
             removeSkill,
             removeResume,
-            getResumeExById,
         }}>
             {children}
         </ResumeContext.Provider>
