@@ -62,7 +62,7 @@ export interface Resume extends PersonInfo {
     education?: Education[];
     skills?: Skill[];
 }
-export const ResumeSchema = new Schema<Resume>(
+const ResumeSchema = new Schema<Resume>(
     {
         userEmail: {
             type: String,

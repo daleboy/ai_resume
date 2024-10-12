@@ -81,9 +81,10 @@ export const initialState: ResumeState = {
 };
 
 export default function ResumeProvider({ children }: { children: React.ReactNode }) {
-    const [resumeState, setResumeState] = React.useState<ResumeState>(initialState);
-    const [resumesState, setResumesState] = React.useState<Resume[]>([]);
     const [stepState, setStepState] = React.useState<number>(1);
+
+    // current operation resume for current loginner
+    const [resumeState, setResumeState] = React.useState<ResumeState>(initialState);
     //Experience
     const [experienceListState, setExperienceListState] = React.useState<Experience[]>([initialExperience])
     const [experienceLoading, setExperienceLoading] = React.useState<boolean[]>([]);
@@ -92,6 +93,9 @@ export default function ResumeProvider({ children }: { children: React.ReactNode
     //Skill
     const [skillListState,setSkillListState] = React.useState<Skill[]>([]);
 
+    // all resumes for current loginner:every user can have more than one resume
+    const [resumesState, setResumesState] = React.useState<Resume[]>([]);
+    
     //hooks
     const router = useRouter();
     const { _id } = useParams();//get the id from the request url address---not used
