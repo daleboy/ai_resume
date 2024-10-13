@@ -1,6 +1,5 @@
 ## About the project
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-This project was developed by following the [video tutorial](<https://www.udemy.com/course/ai-react-nextjs-resume-builder/>) and watching the video.
 It should be noted that the original video explanation did not disclose the github project code to the public. The differences between this project and the project explained in the video are mainly in two aspects:
 1. This project is developed using typescript, while the project explained in the video is developed using js;
 2. The AI ​​integrated in this project is the API of Alibaba Bailian Platform, while the project explained in the video integrates Google's Gemini API.
